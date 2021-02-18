@@ -18,10 +18,19 @@ function App() {
     fetchTasks()
   }, [])
 
-  const addTask = task => {
-    const id = Math.floor(Math.random() * 999999 + 1)
-    const newTask = { id, ...task }
-    setTasks([...tasks, newTask])
+  const addTask = async task => {
+    const res = await fetch('http://localhost:5000/tasks', {
+      method: 'POST',
+      headers: {'Content-type': 'application/json'},
+      body: JSON.stringify(task)
+    })
+
+    const data = await res.json()
+    if (Object.keys(data).length === 0) {
+      alert("The task couldn't be save on the server")
+    } else {
+      setTasks([...tasks, data])
+    }
   }
 
   const deleteTask = async id => {
