@@ -2,26 +2,21 @@ import Header from './components/Header'
 import Tasks from './components/Tasks'
 import AddTask from './components/AddTask'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function App() {
   const [showAddTaskForm, setShowAddTaskForm] = useState(false)
-  const [tasks, setTasks] = useState([{
-    id: 1,
-    text: 'Doctors appointment',
-    day: 'Feb 5th at 02:00pm',
-    reminder: true
-  }, {
-    id: 2,
-    text: 'Meeting at School',
-    day: 'Feb 6th at 01:30pm',
-    reminder: true
-  }, {
-    id: 3,
-    text: 'Food Shopping',
-    day: 'Feb 7th at 02:30pm',
-    reminder: false
-  }])
+  const [tasks, setTasks] = useState([])
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const res = await fetch('http://localhost:5000/tasks')
+      const data = await res.json()
+      setTasks(data)
+    }
+    
+    fetchTasks()
+  }, [])
 
   const addTask = task => {
     const id = Math.floor(Math.random() * 999999 + 1)
@@ -50,7 +45,7 @@ function App() {
         tasks={tasks}
         onDelete={deleteTask}
         onToggle={toggleReminder}
-      /> : <p>There is no tasks</p>}
+      /> : <p>There is no tasks to show</p>}
     </div>
   )
 }
