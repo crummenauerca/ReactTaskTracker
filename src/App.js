@@ -24,8 +24,15 @@ function App() {
     setTasks([...tasks, newTask])
   }
 
-  const deleteTask = id => {
-    setTasks(tasks.filter(task => task.id !== id))
+  const deleteTask = async id => {
+    const res = await fetch(`http://localhost:5000/tasks/${id}`, {
+      method: 'DELETE'
+    })
+    if (res.ok === true) {
+      setTasks(tasks.filter(task => task.id !== id))
+    } else {
+      alert('It was not possible to delete the task on the server!')
+    }
   }
 
   const toggleReminder = id => {
